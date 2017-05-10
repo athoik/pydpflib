@@ -1,0 +1,13 @@
+Metadata-Version: 1.0
+Name: pydpf
+Version: 0.14
+Summary: DPF access extension module
+Home-page: http://pydpf.sourceforge.net
+Author: Martin Strubel/ BoeserFisch / Jens Koehler
+Author-email: irimi@gmx.de
+License: LGPLv2
+Description: 
+        pydpflib provides DPF access to python, with interface to show RGB Images on DPF directly.
+        This is a fork of hackfin's dpf-ax version at http://sourceforge.net/projects/dpf-ax
+                
+Platform: UNKNOWN

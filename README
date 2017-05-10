@@ -1,0 +1,26 @@
+pydpflib - fast DPF access from Python
+======================================
+
+See dpflib_c.py as example how to use it and 
+how you can display images on your DPF.
+
+dpflib_py.py shows how you can access your DPF
+without dpflib.a python bindings.
+
+Installing pydpflib on GNU/Linux Systems
+========================================
+
+You will first need to install the following packages:
+
+1) python (pydpflib is useless without it)
+2) gcc (the compiler, linker, etc.)
+3) python-dev (includes header files needed to compile pydpflib)
+4) libusb-dev (C library to be linked)
+
+sudo apt-get install python gcc python-dev libusb-dev
+
+Once the above packages are installed, you can build and install pydpflib
+with the command
+
+make all
+sudo make install

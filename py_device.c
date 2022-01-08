@@ -76,7 +76,7 @@ typedef struct {
 
 static PyTypeObject DeviceType;
 
-#define DeviceObject_Check(v)	((v)->ob_type == &DeviceType)
+#define DeviceObject_Check(v)	(Py_TYPE(v) == &DeviceType)
 
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -577,7 +577,7 @@ initdpflib(void)
 	// XXX
 	// this only for windows portability
 	// might be removed when using g++ or any other C++ compiler
-	DeviceType.ob_type = &PyType_Type;
+	Py_TYPE(&DeviceType) = &PyType_Type;
 	//
 	Py_InitModule("dpflib", device_methods);
 

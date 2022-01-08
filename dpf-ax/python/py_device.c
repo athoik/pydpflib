@@ -44,7 +44,7 @@ handleError(int err, int line)
 	return NULL;
 }
 
-staticforward PyTypeObject DeviceType;
+static PyTypeObject DeviceType;
 
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -60,7 +60,7 @@ typedef struct {
 	uint16_t        flags;
 } DeviceObject;
 
-staticforward PyTypeObject DeviceType;
+static PyTypeObject DeviceType;
 
 #define DeviceObject_Check(v)	((v)->ob_type == &DeviceType)
 
@@ -373,7 +373,7 @@ Device_getattr(DeviceObject *self, char *name)
 
 // finally, the object type definition
 
-statichere PyTypeObject DeviceType = {
+static PyTypeObject DeviceType = {
 	/* The ob_type field must be initialized in the module init function
 	 * to be portable to Windows without using C++. */
 	PyObject_HEAD_INIT(NULL)

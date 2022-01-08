@@ -488,6 +488,25 @@ static PyMethodDef device_methods[] = {
 	__declspec(dllexport)
 #endif
 
+
+#if PY_MAJOR_VERSION >= 3
+static struct PyModuleDef moduledef = {
+	PyModuleDef_HEAD_INIT,
+	"pydpflib",          /* m_name */
+	"pydpflib",          /* m_doc */
+	-1,                  /* m_size */
+	pydpflibMethods,     /* m_methods */
+	NULL,                /* m_reload */
+	NULL,                /* m_traverse */
+	NULL,                /* m_clear */
+	NULL,                /* m_free */
+};
+
+PyMODINIT_FUNC PyInit_pydpflib(void)
+{
+	return PyModule_Create(&moduledef);
+}
+#else
 void
 INITMODULE(MODULENAME)(void)
 {
@@ -499,3 +518,4 @@ INITMODULE(MODULENAME)(void)
 	Py_InitModule("dpf", device_methods);
 
 }
+#endif

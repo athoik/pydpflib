@@ -12,21 +12,21 @@ libraries = ['dpf', 'usb']
 extra_link_args = []
 extra_compile_args = []
 
-print "***********************************"
-print "***** Platform =%s"%(platform)
-print "***********************************"
+print("***********************************")
+print("***** Platform =%s"%(platform))
+print("***********************************")
 
 
 include_dirs=['dpf-ax/dpflib','dpf-ax/include']
 library_dirs=['dpf-ax/dpflib']
 
 if -1 != platform.find("win32"):
-    print "*** WIN 32 Platform ***"
+    print("*** WIN 32 Platform ***")
     libraries = ["libusb","libdpf"]
     extra_link_args = ['/LIBPATH:' + join(program_files, 'Libusb-win32', 'lib', 'msvc')]
     extra_compile_args = ['/I' + join(program_files, 'Libusb-win32', 'include')]
 else:
-    print "*** Assuming GNU/Linux Platform ***"
+    print("*** Assuming GNU/Linux Platform ***")
 
 dpfmodule = Extension(name = 'dpflib',
                     libraries = libraries,

@@ -18,12 +18,12 @@ d = dpf.open(sys.argv[1])
 size = detect.detect_flash(d)
 
 # Offset, size
-print "Reading %x bytes..." % size
+print("Reading %x bytes..." % size)
 buf = d.readFlash(0x00, size)
 
 f = open("full.bin", "wb")
 f.write(buf)
-print "Wrote full.bin"
+print("Wrote full.bin")
 f.close()
 
 d.close()

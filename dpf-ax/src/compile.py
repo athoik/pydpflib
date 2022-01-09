@@ -52,7 +52,7 @@ class BootHeader:
 					if (start - end) > 0x100:
 						raise ValueError, "XSEG too big!"
 			else:
-				print start
+				print(start)
 				raise ValueError, "Relocation address for xram < 0x800!"
 		end += 1 # non-inclusive, we add 1
 		t = (self.sector + self.flash_start + offset, start, end)
@@ -69,7 +69,7 @@ class BootHeader:
 				len = end - start
 				if verbose:
 					t = (i, offs, start, len)
-					print "[%d] offset: %06x, start: %04x len 0x%04x" % t
+					print("[%d] offset: %06x, start: %04x len 0x%04x" % t)
 			except KeyError:
 				offs, start, end = (0xffffffff, 0xffff, 0xffff)
 
@@ -142,7 +142,7 @@ def merge_segments(index):
 			table[bank] = [a, b, 0, 0]
 
 		if g & F_SPECIAL:
-			print "Ignoring segment %x in overlap check" % i
+			print("Ignoring segment %x in overlap check" % i)
 			continue
 
 		a &= 0xffff
@@ -164,9 +164,9 @@ def merge_segments(index):
 	vals.sort(lambda x, y: cmp(x[0], y[0]))
 	for i in range(len(vals) - 1):
 		if overlap(vals[i], vals[i+1]):
-			print "Module ranges:"
+			print("Module ranges:")
 			for i in vals:
-				print "0x%x 0x%x, banks: %s" % (i[0], i[1], i[2])
+				print("0x%x 0x%x, banks: %s" % (i[0], i[1], i[2]))
 			raise ValueError, "Bank overlap !"
 
 
@@ -180,7 +180,7 @@ max = I.maxaddr()
 
 
 if verbose:
-	print "min: %x, max: %x" % (min, max)
+	print("min: %x, max: %x" % (min, max))
 
 
 addrs = I.addresses()
@@ -201,7 +201,7 @@ for i in addrs:
 		if index.has_key(bank):
 			raise ValueError, "Same bank specified twice!"
 		index[bank] = (start, prev, 0, mode)
-		#print "%x %x %x %x" % index[bank]
+		#print("%x %x %x %x" % index[bank])
 		bank = b
 		mode = nmode
 		start = i
@@ -209,13 +209,13 @@ for i in addrs:
 	prev = i
 
 index[bank] = (start, prev, 0, mode)
-#print "%x %x %x %x" % index[bank]
+#print("%x %x %x %x" % index[bank])
 
-print "----------------"
+print("----------------")
 
 for i in index.keys():
 	t = index[i]
-	print "%02x  %06x %06x" % (i, t[0], t[1])
+	print("%02x  %06x %06x" % (i, t[0], t[1]))
 
 index = merge_segments(index)
 
@@ -225,17 +225,17 @@ buf = ""
 
 r = index[0x80]
 start, end, d, mode = r
-print "Bootstrap:"
-print hex(start), hex(end)
+print("Bootstrap:")
+print(hex(start), hex(end))
 size = end - start + 1
 s = I.tobinstr(start, end)
 buf += s
-print "offset: %x" % len(buf)
+print("offset: %x" % len(buf))
 
 for i in xrange(NBANKS):
 	try:
 		r = index[i]
-		print "mod[%d] %08x %08x mode: %02x" % (i, r[0], r[1], r[3])
+		print("mod[%d] %08x %08x mode: %02x" % (i, r[0], r[1], r[3]))
 		start, end, d, mode = r
 		s = I.tobinstr(start, end)
 		r[2] = len(buf)
@@ -243,7 +243,7 @@ for i in xrange(NBANKS):
 	except KeyError:
 		pass
 
-print "-------"
+print("-------")
 
 # now build jump table:
 

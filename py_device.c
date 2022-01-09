@@ -82,7 +82,7 @@ typedef struct {
 
 static PyTypeObject DeviceType;
 
-#define DeviceObject_Check(v)	((v)->ob_type == &DeviceType)
+#define DeviceObject_Check(v)	(Py_TYPE(v) == &DeviceType)
 
 ////////////////////////////////////////////////////////////////////////////
 //

@@ -66,30 +66,30 @@ def detect_lcd(d):
 	if v[1] != 0xff:
 		try:
 			manu = g_lcdmanu[v[1]]
-			print "Manufacturer:", manu
-			print "Module/driver version:", hex(v[2])
-			print "Identified module:", g_lcdctrl[v[3]]
+			print("Manufacturer:", manu)
+			print("Module/driver version:", hex(v[2]))
+			print("Identified module:", g_lcdctrl[v[3]])
 		except KeyError:
-			print "Unknown module id", hex(v[1]), hex(v[2]), hex(v[3])
+			print("Unknown module id", hex(v[1]), hex(v[2]), hex(v[3]))
 	else:
-		print "Does not support RDID"
+		print("Does not support RDID")
 
 def detect_flash(d):
 	manu, dev0, dev1 = d.probeFlash()
 	try:
-		print "Manufacturer: %s" % g_vendors[manu][0]
+		print("Manufacturer: %s" % g_vendors[manu][0])
 		f = g_vendors[manu][1][dev1]
 	except KeyError:
-		print "Unknown Manufacturer"
-		print "Got id[3]: %x, %x, %x" % (manu, dev0, dev1)
+		print("Unknown Manufacturer")
+		print("Got id[3]: %x, %x, %x" % (manu, dev0, dev1))
 		try:
 			f = g_stm_types[1][dev1]
-			print "Compatible  : %s" % f[0]
+			print("Compatible  : %s" % f[0])
 		except KeyError:
-			print "Unable to detect flash, just assuming 2MB size"
+			print("Unable to detect flash, just assuming 2MB size")
 			f = ("m25p16", 32, 0x10000)
 	bytes = f[1] * f[2]
-	print "Size        : %d MB" % (bytes / (1024 * 1024))
+	print("Size        : %d MB" % (bytes / (1024 * 1024)))
 	return bytes
 
 if __name__ == "__main__":

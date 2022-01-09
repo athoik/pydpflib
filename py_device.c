@@ -13,6 +13,12 @@
 #include <Python.h>
 #include "dpf.h"
 
+#if PY_MAJOR_VERSION >= 3
+#define PyBuffer_New malloc
+#define PyInt_Check PyLong_Check
+#define PyInt_AsLong PyLong_AsLong
+#endif
+
 #ifdef DEBUG
 #	include <stdio.h>
 #endif
@@ -58,7 +64,7 @@ handleError(int err, int line)
 	return NULL;
 }
 
-staticforward PyTypeObject DeviceType;
+static PyTypeObject DeviceType;
 
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -74,7 +80,7 @@ typedef struct {
 	uint16_t        flags;
 } DeviceObject;
 
-staticforward PyTypeObject DeviceType;
+static PyTypeObject DeviceType;
 
 #define DeviceObject_Check(v)	((v)->ob_type == &DeviceType)
 
@@ -455,7 +461,54 @@ Device_getattr(DeviceObject *self, char *name)
 
 // finally, the object type definition
 
-statichere PyTypeObject DeviceType = {
+#if PY_MAJOR_VERSION >= 3
+static PyTypeObject DeviceType = {
+	/* The ob_type field must be initialized in the module init function
+	 * to be portable to Windows without using C++. */
+	PyVarObject_HEAD_INIT(NULL, 0)
+	"device.Device",			/*tp_name*/
+	sizeof(DeviceObject),			/*tp_basicsize*/
+	0,					/*tp_itemsize*/
+	/* methods */
+	(destructor) Device_dealloc,		/*tp_dealloc*/
+	0,					/*tp_print*/
+	Device_getattr, 			/*tp_getattr*/
+	0,					/*tp_setattr*/
+	0,					/*tp_compare*/
+	0,					/*tp_repr*/
+	0,					/*tp_as_number*/
+	0,					/*tp_as_sequence*/
+	0,					/*tp_as_mapping*/
+	0,					/*tp_hash*/
+	0,					/*tp_call*/
+	0,					/*tp_str*/
+	0,					/*tp_getattro*/
+	0,					/*tp_setattro*/
+	0,					/*tp_as_buffer*/
+	Py_TPFLAGS_DEFAULT,			/*tp_flags*/
+	0,					/*tp_doc*/
+	0,					/*tp_traverse*/
+	0,					/*tp_clear*/
+	0,					/*tp_richcompare*/
+	0,					/*tp_weaklistoffset*/
+	0,					/*tp_iter*/
+	0,					/*tp_iternext*/
+	Device_methods,				/*tp_methods*/
+	0,					/*tp_members*/
+	0,					/*tp_getset*/
+	0,					/*tp_base*/
+	0,					/*tp_dict*/
+	0,					/*tp_descr_get*/
+	0,					/*tp_descr_set*/
+	0,					/*tp_dictoffset*/
+	0,					/*tp_init*/
+	0,					/*tp_alloc*/
+	0,					/*tp_new*/
+	0,					/*tp_free*/
+	0,					/*tp_is_gc*/
+};
+#else
+static PyTypeObject DeviceType = {
 	/* The ob_type field must be initialized in the module init function
 	 * to be portable to Windows without using C++. */
 	PyObject_HEAD_INIT(NULL)
@@ -501,6 +554,7 @@ statichere PyTypeObject DeviceType = {
         0,                      /*tp_free*/
         0,                      /*tp_is_gc*/
 };
+#endif
 
 
 
@@ -570,15 +624,31 @@ static PyMethodDef device_methods[] = {
 	__declspec(dllexport)
 #endif
 
-void
-//INITMODULE(MODULENAME)(void)
-initdpflib(void)
-{
-	// XXX
-	// this only for windows portability
-	// might be removed when using g++ or any other C++ compiler
-	DeviceType.ob_type = &PyType_Type;
-	//
-	Py_InitModule("dpflib", device_methods);
+#if PY_MAJOR_VERSION >= 3
+static struct PyModuleDef moduledef = {
+	PyModuleDef_HEAD_INIT,
+	"dpflib",			/* m_name */
+	"Module for dpflib",		/* m_doc */
+	-1,				/* m_size */
+	device_methods,			/* m_methods */
+	NULL,				/* m_reload */
+	NULL,				/* m_traverse */
+	NULL,				/* m_clear */
+	NULL,				/* m_free */
+};
+#endif
 
+PyMODINIT_FUNC
+#if PY_MAJOR_VERSION >= 3
+PyInit_dpflib(void)
+#else
+initdpflib(void)
+#endif
+{
+	Py_TYPE(&DeviceType) = &PyType_Type;
+#if PY_MAJOR_VERSION >= 3
+	return PyModule_Create(&moduledef);
+#else
+	Py_InitModule("dpflib", device_methods);
+#endif
 }
